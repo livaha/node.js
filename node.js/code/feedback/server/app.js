@@ -3,16 +3,47 @@
 var http = require('http')
 var fs = require('fs')
 
+/*添加模板用来渲染
+1 引入模板  -- 先在当前目录下载模板 art-template
+2 渲染格式  -- template 需要的数据模板
+3 渲染数据  -- 在index.html中以{{}}格式的数据
+4 绑定模板与数据 -- 在需要绑定的数据下进行渲染，返回给客户端（浏览器）*/
+var template = require('art-template')
+
+/*模拟留言板数据*/
+var comments = [
+  {
+    name: '张三',
+    message: '今天天气不错！',
+    dateTime: '2015-10-16'
+  },
+  {
+    name: '张三2',
+    message: '今天天气不错！',
+    dateTime: '2015-10-16'
+  },
+  {
+    name: '张三3',
+    message: '今天天气不错！',
+    dateTime: '2015-10-16'
+  }
+]
+
 http 
 	.createServer(function(req,res){
 		//路径请求--响应
 		var url = req.url;
 		if(url === '/'){
-			fs.readFile('../client/index-src.html',function(err,data){
+			fs.readFile('../client/index.html',function(err,data){
 				if(err){
 					return res.end('404 Not Found.')
 				}
-				res.end(data)
+				/*对数据进行渲染*/
+				var htmlStr = template.render(data.toString(),{
+					comments:comments
+				})
+				/*将渲染后的数据返回给客户端*/
+				res.end(htmlStr)
 			})
 		}
 		else if(url.indexOf('/public') === 0){
