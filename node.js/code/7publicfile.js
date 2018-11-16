@@ -22,19 +22,6 @@ server.on('request', function (req, res) {
   fs.readFile(wwwDir + filePath, function (err, data) {
     //3 如果文件不存在，则进入err处理
     if (err) {
-      /* 这里处理不好，注释掉了
-      //4 目录不存在，这里显示目录
-      fs.readdir(wwwDir, function (err, files) {
-        if (err) {
-          console.log('Directory does not exit\n')
-          return res.end('404 Not Found.')
-        }
-        for(var key in files){          
-          console.log(files[key])
-        }         
-      })
-      res.setHeader('Content-Type','text/plain;charset=utf-8')
-      */
       return res.end('404 Not Found.')
     }
 
