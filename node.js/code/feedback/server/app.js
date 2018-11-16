@@ -32,6 +32,27 @@ http
 				res.end(data)
 			})
 		}
+		else if(url === '/post'){
+			/*这里的url跟路径还是有区别的:
+			这里的post是a标签中的href提供的;下面的路径是'../client/post.html'是路径，
+			因为url资源定位符里面没有.html这些*/
+			fs.readFile('../client/post.html',function(err,data){
+				if(err){
+					return res.end('404 Not Found.')
+				}
+				res.end(data)
+			})
+		}
+		else{
+			/*这里的url跟路径还是有区别的:
+			这里的post是a标签中的href提供的;下面的路径是'../client'+url*/
+			fs.readFile('../client/404.html',function(err,data){
+				if(err){
+					return res.end('404 Not Found.')
+				}
+				res.end(data)
+			})
+		}
 	})
 	.listen(8888,function(){
 		console.log('running...')
