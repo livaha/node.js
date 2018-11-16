@@ -13,7 +13,7 @@ server.on('request',function(req,rsp){
 
 	//直接 end 的同时发送响应数据
 	rsp.write('hello nodejs!\n');
-	//rsp.end('end is to send date.');
+	//rsp.end('end is to send data.');
 
 
   // 根据不同的请求路径发送不同的响应结果
@@ -53,5 +53,5 @@ server.listen(8888,function(){
 	console.log('Star server sucessful! Connet http://127.0.0.1:8888/ to accese. ')
 })
 
-/*注意:rsp.end('date')是直接发送数据的了，如果在前面用.end发送了数据，后面再有数据都不会再发送了
-	如果想发送多行，可以用rsp.write（'date'）*/
+/*注意:rsp.end('data')是直接发送数据的了，如果在前面用.end发送了数据，后面再有数据都不会再发送了
+	如果想发送多行，可以用rsp.write（'data'）*/

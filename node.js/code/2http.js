@@ -22,7 +22,7 @@ server.on('request',function(request,response){
 	console.log('Cilent address:port is:',request.socket.remoteAddress,request.socket.remotePort);
 
 	response.write('hello nodejs!');
-	response.end('end is to send date.');
+	response.end('end is to send data.');
 });
 // 3. 绑定端口号，启动服务
 server.listen(8888,function(){
