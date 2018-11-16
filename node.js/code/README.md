@@ -4,6 +4,14 @@
 
 
 
-- 目录testFile为测试时会用到的文件
-  + 1-7 为简单的引入模块  fs ,http
-  + 8-  为引入模板,服务端渲染
+  #####  code目录：
+
+- feedback   ---    留言板项目
+- GetPost     ---    GET/POST详解
+- node_modules   ---   下载的 art-template包
+- testFile      ---   为测试时会用到的文件
+- 文件1-7      ---   为简单的引入模块  fs ,http
+- 文件8-11    ---   为引入模板,服务端渲染
+
+
+
