@@ -35,19 +35,30 @@ var comments = [
 //    也就是原来的 http.createServer
 var app = express();
 app
+	//引入模板
 	.engine('html', require('express-art-template'))
 
 	.get('/pinglun',function(req,res){
+		//添加评论
+		var comment = req.query
+		comment.dateTime = '2018-11-17 96:11:06'
+		comments.unshift(comment)
+		//重定向
+		res.redirect('/')
 
+	})
+	.get('/post',function(req,res){
+
+		res.render('post.html')
 	})
 
 	.get('/',function(req,res){
 		res.render('index.html',{
-			title:'test'
+			title:'test',
+			comments:comments
 		})
 	})
 	.use('/public',express.static('./public/'))
-	.use('/post',express.static('./views/post.html'))
 
 
 
