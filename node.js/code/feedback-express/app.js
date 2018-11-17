@@ -35,33 +35,18 @@ var comments = [
 //    也就是原来的 http.createServer
 var app = express();
 app
-	.get('/',function(req,res){
-			fs.readFile('./views/index.html',function(err,data){
-				if(err){
-					return res.send('404 Not Found.')
-				}
-				/*对数据进行渲染*/
-				var htmlStr = template.render(data.toString(),{
-					comments:comments
-				})
-				/*将渲染后的数据返回给客户端*/
-				res.end(htmlStr)
-			})
-	})
+	.engine('html', require('express-art-template'))
+
 	.get('/pinglun',function(req,res){
-			//1 将评论追加到数组前面
-			var comment = req.query;
-			comment.dateTime = 'xx-xx-xx';
-			comments.unshift(comment);
 
-			//2 将网页重定向到'/'
-			res.statusCode = 302;
-			res.setHeader('Location','/')
-
-      		res.send()
 	})
 
-	.use('/public',express.static('../public/'))
+	.get('/',function(req,res){
+		res.render('index.html',{
+			title:'test'
+		})
+	})
+	.use('/public',express.static('./public/'))
 	.use('/post',express.static('./views/post.html'))
 
 
