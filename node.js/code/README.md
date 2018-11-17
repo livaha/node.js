@@ -6,7 +6,10 @@
 
   #####  code目录：
 
+- express 	   ---    express框架的简单使用
 - feedback   ---    留言板项目
+- feedback-express   ---    express改写的留言板项目
+
 - GetPost     ---    GET/POST详解
 - node_modules   ---   下载的 art-template包
 - testFile      ---   为测试时会用到的文件
