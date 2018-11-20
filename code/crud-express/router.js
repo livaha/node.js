@@ -10,17 +10,32 @@
 */
 
 var express = require('express')
+var fs = require('fs')
 
 var router = express.Router()
 
+var dbPath = './db.json'
+
 router.get('/',function(req,res){
-	res.render('index.html',{
-		Test: [
-        '坚信',
-        '理想',
-        '奋斗',
-        '信心2'
-      ]
+	var students
+	fs.readFile(dbPath,'utf-8',function(err,data){
+		if(err){
+			console.log('read database file err')
+			return express.send('read database file err')
+		}
+		students = JSON.parse(data).students 
+		console.log(students.name)
+
+		
+		res.render('index.html',{
+			Test: [
+	        '坚信',
+	        '理想',
+	        '奋斗',
+	        '信心2'
+	      ],
+	      students:students
+		})
 	})
 })
 
