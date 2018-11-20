@@ -58,9 +58,9 @@ exports.save = function(student,callback){
 }
 
 //根据Id查找对象并返回
-findById = function(student,callback){
+exports.findById = function(id,callback){
 	//读文件：将所有的数据拿出来进行对比
-/*
+
 	fs.readFile(dbPath,'utf-8',function(err,data){
 		if(err){
 			return callback(err)
@@ -74,29 +74,77 @@ findById = function(student,callback){
 		var ret = students.find(function(item){
 			return item.id === parseInt(id)
 		})
+		//console.log(ret)
 		callback(null,ret)
-	})*/
+	})
+}
+
+/**
+ * 更新学生
+ */
+exports.updateById = function (student, callback) {
+  fs.readFile(dbPath, 'utf8', function (err, data) {
+    if (err) {
+      return callback(err)
+    }
+    var students = JSON.parse(data).students
+
+    // 注意：这里记得把 id 统一转换为数字类型
+    student.id = parseInt(student.id)
+
+    // 你要修改谁，就需要把谁找出来
+    // EcmaScript 6 中的一个数组方法：find
+    // 需要接收一个函数作为参数
+    // 当某个遍历项符合 item.id === student.id 条件的时候，find 会终止遍历，同时返回遍历项
+    var stu = students.find(function (item) {
+      return item.id === student.id
+    })
+
+    // 这种方式你就写死了，有 100 个难道就写 100 次吗？
+    // stu.name = student.name
+    // stu.age = student.age
+
+		console.log(student)
+		console.log(stu)
+    // 遍历拷贝对象
+    for (var key in student) {
+      stu[key] = student[key]
+    }
+
+    // 把对象数据转换为字符串
+    var fileData = JSON.stringify({
+      students: students
+    })
+
+    // 把字符串保存到文件中
+    fs.writeFile(dbPath, fileData, function (err) {
+      if (err) {
+        // 错误就是把错误对象传递给它
+        return callback(err)
+      }
+      // 成功就没错，所以错误对象是 null
+      callback(null)
+    })
+  })
 }
 
 /*修改--更新学生
   通过ID修改并更新*/
-exports.updateById = function(student,callback){
+exports.updateById21 = function(student,callback){
 	//1 查找ID对应的对象
 	//2 将对应的对象修改为传进来的新对象
 		//读文件：将所有的数据拿出来进行对比
 
+		console.log('hello in --------updateById'+student)
 	fs.readFile(dbPath,'utf-8',function(err,data){
 		if(err){
 			return callback(err)
 		}
 		var students = JSON.parse(data).students;
 
-		//ES6中的一个数组方法:find
-		//需要接收一个函数作为参数
-		//当某个遍历项符合item.id === student.id条件时，
-		//find会终止遍历，同时返回遍历项
+		student.id = parseInt(student.id)
 		var stu = students.find(function(item){
-			return item.id === parseInt(student.id)
+			return item.id === student.id
 		})
 
 		//遍历拷贝对象

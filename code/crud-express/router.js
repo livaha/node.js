@@ -59,23 +59,50 @@ router.post('/students/new',function(req,res){
 })
 
 router.get('/students/edit',function(req,res){
-	//res.render('edit.html')
-	  console.log('aaa')
-	Student.updateById({
-		id:4,
-		name:'ss'
-	},function(err){
+	//渲染数据页面edit.html
+	//将数据一一对应去渲染
+	console.log(req.query.id)
+	Student.findById(req.query.id,function(err,student){
 		if(err){
-			return console.log('modefiy filed')
+	  		return res.status(500).send('Server error.')			
+		}
+		res.render('edit.html',{
+			student:student
+		})
+	})
+
+
+
+})
+/*
+ * 处理编辑学生
+ */
+router.post('/students/edit', function (req, res) {
+  // 1. 获取表单数据
+  //    req.body
+  // 2. 更新
+  //    Student.updateById()
+  // 3. 发送响应
+		console.log(req.body)
+  Student.updateById(req.body, function (err) {
+    if (err) {
+      return res.status(500).send('Server error.')
+    }
+    res.redirect('/students')
+  })
+})
+/*
+router.post('/students/edit',function(req,res){
+		console.log(req.body)
+	Student.updateById(req.body,function(err){
+		if(err){
+      		return res.status(500).send('Server error.')
 		}
 		console.log('hello')
+    	res.redirect('/students')	
 	})
 })
-
-router.post('/students/edit',function(req,res){
-
-})
-
+*/
 router.get('/students/delete',function(req,res){
 	res.render('edit.html')
 })
