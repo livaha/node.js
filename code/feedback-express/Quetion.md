@@ -1,30 +1,27 @@
+一些问题
 
+1 问：调用save方法的时候，student  学生对象 是怎么传进去的？
 
-var fs = require('fs')
+~~~javascript
+/*在new.html提交的表单数据处理*/
+router.post('/students/new',function(req,res){
+	/*1 获取表单数据
+	  2 处理  将数据保存到db.json文件中用以持久化
+	  3 发送响应*/
+	  console.log(req.body)
+	  //var student =  req.body
+	  //接收的表单数据对象，调用保存方法
+	  //new Student(req.body).save(function(err){
+	  Student.save(req.body,function(err){
+	  	if(err){
+	  		return res.status(500).send('Server error.')
+	  	}
+	  	/*直接重定向*/
+	  	res.redirect('/students')
+	  })
+})
 
-var dbPath = './db.json'
-/*
-function find(err,data){
-	fs.readFile(dbPath,'utf-8',function(err,data){
-		if(err){
-			console.log('read database file err')
-			return express.send('read database file err')
-		}
-		return JSON.parse(data).students 
-	})
-}
-*/
-
-exports.find = function(callback){
-	fs.readFile(dbPath,'utf-8',function(err,data){
-		if(err){
-			console.log('read database file err')
-			return callback(err)
-		}
-		callback(null,JSON.parse(data).students ) 
-	})
-}
-
+//这两个函数不在同一文件内
 /*将新添加的数据保存到文件中*/
 exports.save = function(student,callback){
 	/*1 将db.json中原来的数据students读出为json格式，
@@ -56,3 +53,5 @@ exports.save = function(student,callback){
 		})
 	})
 }
+~~~
+
