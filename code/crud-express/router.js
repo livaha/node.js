@@ -15,6 +15,7 @@ var Student = require('./student-api')
 var router = express.Router()
 
 
+
 router.get('/students',function(req,res){
 	Student.find(function(err,students){
 		if(err){
@@ -58,7 +59,17 @@ router.post('/students/new',function(req,res){
 })
 
 router.get('/students/edit',function(req,res){
-	res.render('edit.html')
+	//res.render('edit.html')
+	  console.log('aaa')
+	Student.updateById({
+		id:4,
+		name:'ss'
+	},function(err){
+		if(err){
+			return console.log('modefiy filed')
+		}
+		console.log('hello')
+	})
 })
 
 router.post('/students/edit',function(req,res){

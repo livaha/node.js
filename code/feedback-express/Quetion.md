@@ -1,6 +1,6 @@
-一些问题
+一些重点笔记--包括ES6
 
-1 问：调用save方法的时候，student  学生对象 是怎么传进去的？
+#### 1-回调函数的运用
 
 ~~~javascript
 /*在new.html提交的表单数据处理*/
@@ -54,4 +54,62 @@ exports.save = function(student,callback){
 	})
 }
 ~~~
+
+
+
+### ES6语法--用到的
+
+#### find方法
+
+~~~
+
+/*修改--更新学生
+  通过ID修改并更新*/
+exports.updateById = function(student,callback){
+	//1 查找ID对应的对象
+	//2 将对应的对象修改为传进来的新对象
+		//读文件：将所有的数据拿出来进行对比
+
+	fs.readFile(dbPath,'utf-8',function(err,data){
+		if(err){
+			return callback(err)
+		}
+		var students = JSON.parse(data).students;
+
+		//ES6中的一个数组方法:find
+		//需要接收一个函数作为参数
+		//当某个遍历项符合item.id === student.id条件时，
+		//find会终止遍历，同时返回遍历项
+		var stu = students.find(function(item){
+			return item.id === parseInt(student.id)
+		})
+
+		//遍历拷贝对象
+		for(var key in student){
+			stu[key] = student[key]
+		}
+
+		//把对象数据转换为字符串
+		var fileData = JSON.stringify({
+			students:students
+		})
+
+		//把字符串保存到文件中
+		fs.writeFile(dbPath,fileData,function(err){
+			if(err){
+				//错误就把错误对象传递给它
+				return callback(err)
+			}
+			//成功没错，就把错误对象置空
+			callback(null)
+		})
+	})
+}
+~~~
+
+
+
+
+
+
 
