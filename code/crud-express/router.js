@@ -10,23 +10,17 @@
 */
 
 var express = require('express')
-var fs = require('fs')
+var Students = require('./student-api')
 
 var router = express.Router()
 
-var dbPath = './db.json'
 
 router.get('/',function(req,res){
-	var students
-	fs.readFile(dbPath,'utf-8',function(err,data){
+	Students.find(function(err,students){
 		if(err){
-			console.log('read database file err')
-			return express.send('read database file err')
+			return res.status(500).send('Server error.')
 		}
-		students = JSON.parse(data).students 
-		console.log(students.name)
 
-		
 		res.render('index.html',{
 			Test: [
 	        '坚信',
