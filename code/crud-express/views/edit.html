@@ -52,6 +52,7 @@
         <form action="/students/edit" method="post">
           <div class="form-group">
             <label for="">姓名</label>
+            <input style="display:none;" type="text" id="" name="id" value="{{student.id}}">
             <input type="text" class="form-control" id="" name="name" required minlength="2" maxlength="10" value="{{student.name}}">
           </div>
           <div class="form-group">

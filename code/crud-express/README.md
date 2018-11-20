@@ -112,6 +112,10 @@
 
 看到没，对象属性undefined，肯定是对象undefined，
 
+刚是因为id没找着，这里edit.html里补上一个id
+
+![1542734353999](assets/1542734353999.png)
+
 
 
 
