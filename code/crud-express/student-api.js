@@ -89,7 +89,7 @@ exports.updateById = function (student, callback) {
     }
     var students = JSON.parse(data).students
 
-    // 注意：这里记得把 id 统一转换为数字类型
+    // 注意：这里记得把 id 统一转换为数字类型,不然数字和字符串会混乱
     student.id = parseInt(student.id)
 
     // 你要修改谁，就需要把谁找出来
@@ -104,8 +104,8 @@ exports.updateById = function (student, callback) {
     // stu.name = student.name
     // stu.age = student.age
 
-		console.log(student)
-		console.log(stu)
+	console.log(student)
+	console.log(stu)
     // 遍历拷贝对象
     for (var key in student) {
       stu[key] = student[key]
@@ -128,46 +128,36 @@ exports.updateById = function (student, callback) {
   })
 }
 
-/*修改--更新学生
-  通过ID修改并更新*/
-exports.updateById21 = function(student,callback){
-	//1 查找ID对应的对象
-	//2 将对应的对象修改为传进来的新对象
-		//读文件：将所有的数据拿出来进行对比
-
-		console.log('hello in --------updateById'+student)
+exports.deleteById = function(id,callback){
+	//同上，读文件，取出相应id对应的对象，将移出数组
 	fs.readFile(dbPath,'utf-8',function(err,data){
 		if(err){
-			return callback(err)
+	        // 错误就是把错误对象传递给它
+	        return callback(err)
 		}
-		var students = JSON.parse(data).students;
 
-		student.id = parseInt(student.id)
-		var stu = students.find(function(item){
-			return item.id === student.id
+		var students = JSON.parse(data).students
+
+		console.log(students)
+		//找出相应下标
+		var deleteId = students.findIndex(function(item){
+			return item.id === parseInt(id)
 		})
 
-		//遍历拷贝对象
-		for(var key in student){
-			stu[key] = student[key]
-		}
+		//根据下标从数组中删除对应的学生对象
+		students.splice(deleteId,1)
 
-		//把对象数据转换为字符串
+		//把对象方法转为字符串
 		var fileData = JSON.stringify({
 			students:students
 		})
 
-		//把字符串保存到文件中
+		//将字符串保存到文件 中
 		fs.writeFile(dbPath,fileData,function(err){
 			if(err){
-				//错误就把错误对象传递给它
 				return callback(err)
 			}
-			//成功没错，就把错误对象置空
 			callback(null)
 		})
-
 	})
-
-
 }

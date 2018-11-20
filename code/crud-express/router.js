@@ -70,9 +70,6 @@ router.get('/students/edit',function(req,res){
 			student:student
 		})
 	})
-
-
-
 })
 /*
  * 处理编辑学生
@@ -91,20 +88,17 @@ router.post('/students/edit', function (req, res) {
     res.redirect('/students')
   })
 })
-/*
-router.post('/students/edit',function(req,res){
-		console.log(req.body)
-	Student.updateById(req.body,function(err){
+
+
+router.get('/students/delete',function(req,res){
+	Student.deleteById(req.query.id,function(err){
 		if(err){
       		return res.status(500).send('Server error.')
 		}
-		console.log('hello')
-    	res.redirect('/students')	
+		res.redirect('/students')
 	})
+
 })
-*/
-router.get('/students/delete',function(req,res){
-	res.render('edit.html')
-})
+
 
 module.exports = router

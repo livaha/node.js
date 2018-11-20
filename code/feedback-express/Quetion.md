@@ -61,6 +61,9 @@ exports.save = function(student,callback){
 
 #### find方法
 
+当某个遍历项符合item.id === student.id条件时，
+find会终止遍历，同时返回遍历项
+
 ~~~javascript
 
 //根据Id查找对象并返回
@@ -86,6 +89,49 @@ exports.findById = function(id,callback){
 ~~~
 
 
+
+#### findIndex
+
+findIndex 方法专门用来根据条件查找元素的下标
+
+~~~javascript
+
+/**
+ * 删除学生
+ */
+exports.deleteById = function (id, callback) {
+  fs.readFile(dbPath, 'utf8', function (err, data) {
+    if (err) {
+      return callback(err)
+    }
+    var students = JSON.parse(data).students
+
+    // findIndex 方法专门用来根据条件查找元素的下标
+    var deleteId = students.findIndex(function (item) {
+      return item.id === parseInt(id)
+    })
+
+    // 根据下标从数组中删除对应的学生对象
+    students.splice(deleteId, 1)
+
+    // 把对象数据转换为字符串
+    var fileData = JSON.stringify({
+      students: students
+    })
+
+    // 把字符串保存到文件中
+    fs.writeFile(dbPath, fileData, function (err) {
+      if (err) {
+        // 错误就是把错误对象传递给它
+        return callback(err)
+      }
+      // 成功就没错，所以错误对象是 null
+      callback(null)
+    })
+  })
+}
+
+~~~
 
 
 
