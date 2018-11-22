@@ -7,7 +7,12 @@ var router = express.Router()
 
 
 router.get('/',function(req,res){
-	res.render('index.html')
+    console.log(req.session.user)
+	res.render('index.html',{
+		user:req.session.user
+	})
+
+
 })
 
 router.get('/login',function(req,res){
@@ -15,7 +20,35 @@ router.get('/login',function(req,res){
 })
 
 router.post('/login',function(req,res){
-	res.render('login.html')
+	//获取登陆请求表单数据
+	//判断邮箱密码是否正确
+	//设置session
+	var body = req.body
+	User.findOne({
+			email:body.email,
+			password:md5(md5(body.password))
+	},function(err,user){
+		if(err){
+			return res.status(500).json({
+				success:false,
+				message:'server err'
+			})
+		}
+		if(!user){
+			//不存在		
+			return res.status(200).json({
+				err_code:1,
+				message:'Email or Nickname aready exists'
+			})
+		}
+		req.session.user = user
+		//在客户端处理重定向的问题
+
+	    res.status(200).json({
+	      err_code: 0,
+	      message: 'OK'
+	    })
+	})
 })
 
 router.get('/register',function(req,res){
@@ -68,20 +101,29 @@ router.post('/register',function(req,res){
 					message:'Server busy,try later...'
 				})
 			}
+
+			//注册成功，使用Session记录用户的登陆状态
+			//req.session.isLogin = true
+			req.session.user = user
+
+
+			//console.log('ok')
+			//dataType: 'json' ajax中的这个是要求json格式 才会处理
+			//res.status(200),send('ok')
+			//express提供一个响应方法：json
+			res.status(200).json({
+				err_code:0,
+				message:'ok'
+			})
 		})
 
-
-
-		console.log('ok')
-		//dataType: 'json' ajax中的这个是要求json格式 才会处理
-		//res.status(200),send('ok')
-		//express提供一个响应方法：json
-		res.status(200).json({
-			err_code:0,
-			message:'ok'
-		})
 
 	})
+})
+
+router.get('/logout',function(req,res){
+	req.session.user = null
+	res.redirect('/login')
 })
 
 module.exports = router

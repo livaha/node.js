@@ -2,6 +2,7 @@ var express = require('express')
 var path = require('path')
 var bodyParser = require('body-parser')
 var router = require('./router')
+var session = require('express-session')
 
 var app = express()
 
@@ -16,6 +17,12 @@ app.set('views',path.join(__dirname,'./views/'))
 /*配置body-parser*/
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+}))
 
 app.use(router)
 
