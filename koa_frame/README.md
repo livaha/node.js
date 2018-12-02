@@ -71,6 +71,8 @@ app
 
 https://github.com/koajs/static-cache
 
+**用koa-static-cache代替koa-static，可以减少加载文件大小**
+
 ## Installation
 
 ```
