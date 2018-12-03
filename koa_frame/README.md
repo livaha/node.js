@@ -179,6 +179,111 @@ app
 
 
 
+# koa-bodyparser（获取post参数的中间件）
+
+
+
+获取请求的参数
+获取get请求的参数就比较简单了，可以直接通过ctx点语法出来，下面是获取get请求参数的代码
+
+~~~
+const Koa = require('koa')
+const app = new Koa()
+
+app.use( async (ctx) => {
+    ctx.body = {
+        url: ctx.url,
+        ctx_query: ctx.query,
+        ctx_querystring: ctx.querystring
+    }
+})
+
+app.listen(3000, () => {
+	console.log('start ok')
+})
+~~~
+
+
+
+获取post请求参数，使用原生比较繁琐，需要转换，等等介绍一下使用中间件来获取post请求参数，就很简单方便了
+
+~~~
+//使用原生方式
+const Koa = require('koa')
+const app = new Koa()
+
+app.use( async (ctx) => {
+    let data = await parseData(ctx)
+    ctx.body = data
+})
+
+app.listen(3000, () => {
+    console.log('start ok')
+})
+
+function parseData(ctx) {
+    return new Promise((resolve, reject) => {
+        try {
+            let str = ''
+            ctx.req.on('data', (data) => {
+                str += data
+            })
+            ctx.req.addListener('end', () => {
+                resolve(parseUrl(str))
+            })
+        } catch (err) {
+            reject(err)
+        }
+    });
+}
+
+function parseUrl(url) {
+    let obj = {}
+    let arr = url.split('&')
+    arr.forEach((e, i) => {
+        let temparr = e.split('=')
+        obj[temparr[0]] = temparr[1]
+    });
+    return obj
+}
+
+~~~
+
+
+
+下面这是使用中间件：koa-bodyparser，来获取post请求的参数
+首先先得安装好中间件
+npm install koa-bodyparser --save
+安装好后，就试一试吧：
+-----------------------------------------------
+~~~
+首先先得安装好中间件
+npm install koa-bodyparser --save
+安装好后，就试一试吧：
+-----------------------------------------------
+const Koa = require('koa')
+const bodyParser = require('koa-bodyparser')
+
+const app = new Koa()
+
+app.use(bodyParser())
+
+app.use( async (ctx) => {
+    ctx.body =  ctx.request.body
+})
+
+app.listen(3000, () => {
+    console.log('start ok')
+})
+------------------------------------------------
+再于原生方式作对比，是不是很简单呢，直接一个，request.body就可以获取到post请求的参数了。
+
+~~~
+
+
+
+
+
 # koa-convert
 
 http://npm.taobao.org/package/koa-convert
