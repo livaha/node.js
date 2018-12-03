@@ -11,7 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "koa": "^2.6.2",
+    "koa-better-body": "^3.0.4",
+    "koa-convert": "^1.2.0",
+    "koa-cors": "0.0.16",
     "koa-router": "^7.4.0",
-    "koa-static-cache": "^5.1.2"
+    "koa-static-cache": "^5.1.2",
+    "nodemon": "^1.18.7"
   }
 }
