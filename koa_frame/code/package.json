@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "koa-better-body": "^3.0.4"
+  }
+}

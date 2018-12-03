@@ -224,6 +224,258 @@ function modernMiddleware (ctx, next) {
 
 
 
+# koa使用cookie
+
+https://blog.csdn.net/summerpowerz/article/details/80979500
+
+#### ctx.cookies.get(name, [options])
+
+通过 options 获取 cookie name:
+
+- signed 所请求的cookie应该被签名 
+
+### ctx.cookies.set(name, value, [options])
+
+通过 options 设置 cookie name 的 value :
+
+- maxAge 一个数字表示从 Date.now() 得到的毫秒数 signed cookie 签名值 expires cookie 过期的
+- Date path cookie 路径, 默认是’/’ domain cookie 域名 secure 安全 cookie
+- httpOnly 服务器可访问 cookie, 默认是 true overwrite 一个布尔值，表示是否覆盖以前设置的同名的
+- cookie (默认是 false). 如果是 true, 在同一个请求中设置相同名称的所有
+- Cookie（不管路径或域）是否在设置此Cookie 时从 Set-Cookie 标头中过滤掉。 
+
+### 使用
+
+```
+const Koa = require('koa');
+
+const server = new Koa();
+server.listen(8080);
+
+server.keys = ["hello world"];
+server.use(async (ctx) => {
+    if (ctx.url === '/aaa') {
+        ctx.cookies.set(
+            'key',
+            'aaa',
+            {
+                domain: 'localhost', 
+                signed: true, 
+                path: '/aaa',
+                maxAge: 10 * 60 * 1000, 
+                expires: new Date('2017-08-01'), 
+                httpOnly: false,
+                overwrite: false
+            }
+        );
+        ctx.body = 'cookie set ok';
+    } else {
+        ctx.body = 'hello world!';
+    }
+});1234567891011121314151617181920212223242526
+```
+
+![这里写图片描述](assets/20180710003823189.png)
+![这里写图片描述](assets/20180710003909390.png)
+
+
+
+
+
+# koa-session
+
+## **一、Koa-Session简单介绍**
+
+session是另一种记录客户状态的机制，不同的是Cookie保存在客户端浏览器中，而session保存在服务器上。
+
+## **二、Session的工作流程**
+
+当浏览器访问服务器并发送第一次请求时，服务器端会创建一个session对象，生成一个类似于key,value的键值对， 然后将key(cookie)返回到浏览器(客户)端，浏览器下次再访问时，携带key(cookie)，找到对应的session(value)。 客户的信息都保存在session中
+
+## 三、koa-session的使用: 
+
+**1.安装**  **koa-session**
+
+```
+npm install koa-session --save
+```
+
+**2.引入express-session**
+
+```
+const session = require('koa-session');
+```
+
+ **3.设置官方文档提供的中间件**
+
+```
+app.keys = ['some secret hurr'];
+const CONFIG = {
+   key: 'koa:sess',   //cookie key (default is koa:sess)
+   maxAge: 86400000,  // cookie的过期时间 maxAge in ms (default is 1 days)
+   overwrite: true,  //是否可以overwrite    (默认default true)
+   httpOnly: true, //cookie是否只有服务器端可以访问 httpOnly or not (default true)
+   signed: true,   //签名默认true
+   rolling: false,  //在每次请求时强行设置cookie，这将重置cookie过期时间（默认：false）
+   renew: false,  //(boolean) renew session when session is nearly expired,
+};
+app.use(session(CONFIG, app));
+```
+
+**4.使用** 
+
+```
+     设置值 ctx.session.username = "张三";
+     获取值 ctx.session.username
+```
+
+ 
+
+## **四、Koa中Cookie和Session区别**
+
+1、cookie数据存放在客户的浏览器上，session数据放在服务器上。
+
+2、cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗
+
+   考虑到安全应当使用session。
+
+3、session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能
+
+   考虑到减轻服务器性能方面，应当使用COOKIE。
+
+4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。
+
+ 
+
+## 五、官方Example
+
+View counter example:
+
+```
+const session = require('koa-session');
+const Koa = require('koa');
+const app = new Koa();
+ 
+app.keys = ['some secret hurr'];
+ 
+const CONFIG = {
+  key: 'koa:sess', /** (string) cookie key (default is koa:sess) */
+  /** (number || 'session') maxAge in ms (default is 1 days) */
+  /** 'session' will result in a cookie that expires when session/browser is closed */
+  /** Warning: If a session cookie is stolen, this cookie will never expire */
+  maxAge: 86400000,
+  autoCommit: true, /** (boolean) automatically commit headers (default true) */
+  overwrite: true, /** (boolean) can overwrite or not (default true) */
+  httpOnly: true, /** (boolean) httpOnly or not (default true) */
+  signed: true, /** (boolean) signed or not (default true) */
+  rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
+  renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
+};
+ 
+app.use(session(CONFIG, app));
+// or if you prefer all default config, just use => app.use(session(app));
+ 
+app.use(ctx => {
+  // ignore favicon
+  if (ctx.path === '/favicon.ico') return;
+ 
+  let n = ctx.session.views || 0;
+  ctx.session.views = ++n;
+  ctx.body = n + ' views';
+});
+ 
+app.listen(3000);
+console.log('listening on port 3000');
+```
+
+
+
+# Koa-pug（用的少）
+
+A [Pug](https://github.com/pugjs) middleware for [Koa](http://koajs.com/).
+
+# How to use
+
+```
+npm install koa-pug --save
+const koa = require('koa')
+const app = koa()
+ 
+const Pug = require('koa-pug')
+const pug = new Pug({
+  viewPath: './views',
+  debug: false,
+  pretty: false,
+  compileDebug: false,
+  locals: global_locals_for_all_pages,
+  basedir: 'path/for/pug/extends',
+  helperPath: [
+    'path/to/pug/helpers',
+    { random: 'path/to/lib/random.js' },
+    { _: require('lodash') }
+  ],
+  app: app // equals to pug.use(app) and app.use(pug.middleware)
+})
+ 
+pug.locals.someKey = 'some value'
+ 
+app.use(function* () {
+  this.render('index', locals_for_this_page, true)
+})
+```
+
+
+
+# koa-ejs
+
+Koa ejs view render middleware. support all feature of [ejs](https://github.com/mde/ejs). 
+
+## Usage
+
+### Example
+
+```
+const Koa = require('koa');
+const render = require('koa-ejs');
+const path = require('path');
+ 
+const app = new Koa();
+render(app, {
+  root: path.join(__dirname, 'view'),
+  layout: 'template',
+  viewExt: 'html',
+  cache: false,
+  debug: true
+});
+ 
+app.use(async function (ctx) {
+  await ctx.render('user');
+});
+ 
+app.listen(7001);
+```
+
+Or you can checkout the [example](https://github.com/koajs/ejs/tree/master/example).
+
+### settings
+
+- root: view root directory.
+- layout: global layout file, default is `layout`, set `false` to disable layout.
+- viewExt: view file extension (default `html`).
+- cache: cache compiled templates (default `true`).
+- debug: debug flag (default `false`).
+- delimiter: character to use with angle brackets for open / close (default `%`).
+
+
+
+
+
+
+
+
+
+
+
 
 
 
