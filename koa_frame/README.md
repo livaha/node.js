@@ -254,8 +254,9 @@ function parseUrl(url) {
 下面这是使用中间件：koa-bodyparser，来获取post请求的参数
 首先先得安装好中间件
 npm install koa-bodyparser --save
+
 安装好后，就试一试吧：
------------------------------------------------
+
 ~~~
 首先先得安装好中间件
 npm install koa-bodyparser --save
